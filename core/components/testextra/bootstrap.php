@@ -5,9 +5,9 @@
  */
 
 // Add your classes to modx's autoloader
-\MODX\Revolution\modX::getLoader()->addPsr4('TestExtra\\', $namespace['path'] . 'src/');
+$modx->addPackage('TestExtra\\Model\\', $namespace['path'] . 'src/', null, 'TestExtra\\');
 
-if (!$modx->services->has('testextra') {
+if (!$modx->services->has('testextra')) {
     // Register base class in the service container
     $modx->services->add('testextra', function($c) use ($modx) {
         return new \TestExtra\TestExtra($modx);

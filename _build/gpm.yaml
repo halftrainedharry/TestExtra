@@ -4,6 +4,11 @@ lowCaseName: testextra
 namespace: TestExtra
 description: 'Testing some Ext.js functionality'
 author: halftrainedharry
+database:
+    tables:
+        - "\\TestExtra\\Model\\Product"
+        - "\\TestExtra\\Model\\Category"
+        - "\\TestExtra\\Model\\ProductCategory"                
 menus:
     - text: testextra.menu
       action: manage

@@ -1,4 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model package="TestExtra\Model\" baseClass="xPDO\Om\xPDOSimpleObject" platform="mysql" defaultEngine="InnoDB" version="3.0">
 
+    <object class="Product" table="testextra_product" extends="xPDO\Om\xPDOSimpleObject">
+        <field key="name" dbtype="varchar" phptype="string" precision="200" null="false" default="" />
+
+        <composite alias="ProductCategories" class="TestExtra\Model\ProductCategory" local="id" foreign="product_id" cardinality="many" owner="local" />
+    </object>
+
+    <object class="Category" table="testextra_category" extends="xPDO\Om\xPDOSimpleObject">
+        <field key="name" dbtype="varchar" phptype="string" precision="200" null="false" default="" />
+
+        <composite alias="ProductCategories" class="TestExtra\Model\ProductCategory" local="id" foreign="category_id" cardinality="many" owner="local" />
+    </object>
+
+    <object class="ProductCategory" table="testextra_productcategory" extends="xPDO\Om\xPDOObject">
+        <field key="product_id" dbtype="int" attributes="unsigned" precision="10" phptype="integer" null="false" index="pk" />
+        <field key="category_id" dbtype="int" attributes="unsigned" precision="10" phptype="integer" null="false" index="pk" />
+
+        <index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE">
+            <column key="product_id" length="" collation="A" null="false" />
+            <column key="category_id" length="" collation="A" null="false" />
+        </index>
+
+        <aggregate alias="Product" class="TestExtra\Model\Product" local="product_id" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Category" class="TestExtra\Model\Category" local="category_id" foreign="id" cardinality="one" owner="foreign" />
+    </object>
+
 </model>
