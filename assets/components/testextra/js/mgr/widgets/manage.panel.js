@@ -21,12 +21,24 @@ testextra.panel.Manage = function (config) {
                 hideMode: 'offsets',
                 items: [
                     {
-                        title: _('testextra.manage.page_title'),
+                        title: 'Products',
                         layout: 'form',
                         items: [
                             {
-                                cls: 'main-wrapper',
-                               html: 'Greetings from John. Thank you for using GPM.'
+                                xtype: 'testextra-grid-products',
+                                preventRender: true,
+                                cls: 'main-wrapper'
+                            }
+                        ]
+                    },
+                    {
+                        title: 'Categories',
+                        layout: 'form',
+                        items: [
+                            {
+                                xtype: 'testextra-grid-categories',
+                                preventRender: true,
+                                cls: 'main-wrapper'
                             }
                         ]
                     }
