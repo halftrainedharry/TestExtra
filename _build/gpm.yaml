@@ -1,0 +1,9 @@
+name: TestExtra
+version: 1.0.0-pl
+lowCaseName: testextra
+namespace: TestExtra
+description: 'Testing some Ext.js functionality'
+author: halftrainedharry
+menus:
+    - text: testextra.menu
+      action: manage
