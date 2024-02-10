@@ -6,10 +6,12 @@ testextra.grid.Products = function(config) {
         baseParams: {
             action: 'TestExtra\\Processors\\Product\\GetList'
         },
-        fields: ['id', 'name'],
+        fields: ['id', 'name', 'published', 'deleted'],
         autoHeight: true,
         paging: true,
         remoteSort: true,
+        save_action: 'TestExtra\\Processors\\Product\\UpdateFromGrid',
+        autosave: true,
         columns: [
             {
                 header: 'Product ID',
@@ -21,7 +23,28 @@ testextra.grid.Products = function(config) {
                 header: 'Product Name',
                 dataIndex: 'name',
                 sortable: true,
+                editor: { xtype: 'textfield' },
                 width: 200
+            },
+            {
+                header: 'Published',
+                dataIndex: 'published',
+                sortable: false,
+                renderer: this.rendYesNo,
+                editor: { xtype: 'modx-combo-boolean' },
+                width: 100
+            },
+            {
+                header: 'Deleted',
+                dataIndex: 'deleted',
+                renderer: function (value) {
+                    return value
+                        ? String.format('<span class="red">{0}</span>', 'Deleted')
+                        : String.format('<span class="green">{0}</span>', 'No');
+                },
+                editor: { xtype: 'combo-boolean' },
+                sortable: false,
+                width: 100,
             }
         ],
         tbar: [{
@@ -106,6 +129,19 @@ testextra.window.CreateUpdateProduct = function(config) {
                 fieldLabel: 'Name',
                 name: 'name',
                 anchor: '100%'
+            },
+            {
+                xtype: 'xcheckbox',
+                fieldLabel: 'Published',
+                name: 'published',
+                anchor: '100%'
+            },
+            {
+                xtype: 'combo-boolean', //xtype: 'modx-combo-boolean',
+                fieldLabel: 'Deleted',
+                // description: 'some description as a tooltip',
+                hiddenName: 'deleted',
+                anchor: '100%',
             },
             {
                 xtype: 'textfield',
