@@ -6,7 +6,7 @@ testextra.grid.Products = function(config) {
         baseParams: {
             action: 'TestExtra\\Processors\\Product\\GetList'
         },
-        fields: ['id', 'name'],
+        fields: ['id', 'name', 'categories', 'category_names'],
         autoHeight: true,
         paging: true,
         remoteSort: true,
@@ -21,6 +21,12 @@ testextra.grid.Products = function(config) {
                 header: 'Product Name',
                 dataIndex: 'name',
                 sortable: true,
+                width: 200
+            },
+            {
+                header: 'Categories',
+                dataIndex: 'category_names',
+                sortable: false,
                 width: 200
             }
         ],
@@ -47,6 +53,9 @@ Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
         if (!this.menu.record || !this.menu.record.id){
             return false;
         }
+
+        this.menu.record['categories[]'] = this.menu.record.categories;
+
         var win = MODx.load({
             xtype: 'testextra-window-product-create-update',
             title: 'Update Product',
@@ -106,6 +115,12 @@ testextra.window.CreateUpdateProduct = function(config) {
                 fieldLabel: 'Name',
                 name: 'name',
                 anchor: '100%'
+            },
+            {
+                xtype: 'testextra-combo-category',
+                fieldLabel: 'Categories',
+                anchor: '100%',
+                allowBlank: true
             },
             {
                 xtype: 'textfield',
