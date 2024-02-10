@@ -18,6 +18,8 @@ class Product extends \TestExtra\Model\Product
         'fields' => 
         array (
             'name' => '',
+            'published' => 0,
+            'deleted' => 0,
         ),
         'fieldMeta' => 
         array (
@@ -28,6 +30,24 @@ class Product extends \TestExtra\Model\Product
                 'precision' => '200',
                 'null' => false,
                 'default' => '',
+            ),
+            'published' => 
+            array (
+                'dbtype' => 'tinyint',
+                'attributes' => 'unsigned',
+                'precision' => '1',
+                'phptype' => 'boolean',
+                'null' => false,
+                'default' => 0,
+            ),
+            'deleted' => 
+            array (
+                'dbtype' => 'tinyint',
+                'attributes' => 'unsigned',
+                'precision' => '1',
+                'phptype' => 'boolean',
+                'null' => false,
+                'default' => 0,
             ),
         ),
         'composites' => 

@@ -4,6 +4,9 @@
     <object class="Product" table="testextra_product" extends="xPDO\Om\xPDOSimpleObject">
         <field key="name" dbtype="varchar" phptype="string" precision="200" null="false" default="" />
 
+        <field key="published" dbtype="tinyint" attributes="unsigned" precision="1" phptype="boolean" null="false" default="0" />
+        <field key="deleted" dbtype="tinyint" attributes="unsigned" precision="1" phptype="boolean" null="false" default="0" />
+
         <composite alias="ProductCategories" class="TestExtra\Model\ProductCategory" local="id" foreign="product_id" cardinality="many" owner="local" />
     </object>
 
