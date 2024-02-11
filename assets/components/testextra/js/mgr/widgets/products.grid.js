@@ -6,12 +6,12 @@ testextra.grid.Products = function(config) {
         baseParams: {
             action: 'TestExtra\\Processors\\Product\\GetList'
         },
-        fields: ['id', 'name'],
+        fields: ['id', 'name', 'vendor_id', 'state', 'vendor_name'],
         autoHeight: true,
         paging: true,
         remoteSort: true,
         save_action: 'TestExtra\\Processors\\Product\\UpdateFromGrid',
-        autosave: true,        
+        autosave: true,
         columns: [
             {
                 header: 'Product ID',
@@ -27,12 +27,41 @@ testextra.grid.Products = function(config) {
                 width: 200
             },
             {
-                header      : 'Actions',
-                sortable    : false,
-                editable    : false,
-                width       : 100,
-                fixed       : true,
-                renderer    : this.renderActions
+                // Inline editing using the same combobox as in the window
+                // Doesn't work correctly with paging or when vendor_id = 0
+                header: 'Vendor',
+                dataIndex: 'vendor_id',
+                editor: {
+                    xtype: 'testextra-combo-vendors',
+                    renderer: true //Shows value instead of ID in the row
+                },
+                sortable: false,
+                width: 200
+            },
+            {
+                header: 'Vendor Name',
+                dataIndex: 'vendor_name',
+                sortable: false,
+                editable: false,
+                width: 200
+            },
+            {
+                header: 'State',
+                dataIndex: 'state',
+                editor: {
+                    xtype: 'testextra-combo-product-state',
+                    // renderer: true //Shows value instead of text in the row
+                },
+                sortable: false,
+                width: 200
+            },
+            {
+                header: 'Actions',
+                sortable: false,
+                editable: false,
+                width: 100,
+                fixed: true,
+                renderer: this.renderActions
             }
         ],
         tbar: [{
@@ -159,6 +188,20 @@ testextra.window.CreateUpdateProduct = function(config) {
                 xtype: 'textfield',
                 fieldLabel: 'Name',
                 name: 'name',
+                anchor: '100%'
+            },
+            {
+                xtype: 'testextra-combo-vendors',
+                fieldLabel: 'Vendor',
+                name: 'vendor_id',
+                anchor: '100%'
+                // width: 500,
+                // description: 'some tooltip text',
+            },
+            {
+                xtype: 'testextra-combo-product-state',
+                fieldLabel: 'State',
+                name: 'state',
                 anchor: '100%'
             },
             {
