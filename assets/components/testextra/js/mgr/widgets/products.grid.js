@@ -6,7 +6,7 @@ testextra.grid.Products = function(config) {
         baseParams: {
             action: 'TestExtra\\Processors\\Product\\GetList'
         },
-        fields: ['id', 'name'],
+        fields: ['id', 'name', 'features_count'],
         autoHeight: true,
         paging: true,
         remoteSort: true,
@@ -25,6 +25,12 @@ testextra.grid.Products = function(config) {
                 sortable: true,
                 editor: { xtype: 'textfield' },
                 width: 200
+            },
+            {
+                header: 'Features Count',
+                dataIndex: 'features_count',
+                sortable: true,
+                width: 100
             },
             {
                 header: 'Actions',
@@ -63,6 +69,7 @@ Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
             xtype: 'testextra-window-product-create-update',
             title: 'Update Product',
             action: 'TestExtra\\Processors\\Product\\Update',
+            record: this.menu.record,
             listeners: {
                 'success': {fn: function() { this.refresh(); }, scope: this}
             }
@@ -150,25 +157,38 @@ Ext.reg('testextra-grid-products', testextra.grid.Products);
 testextra.window.CreateUpdateProduct = function(config) {
     config = config || {};
     Ext.applyIf(config, {
-        width: 500,
+        width: 1200,
+        autoHeight: true,
         closeAction: 'close',
         url: MODx.config.connector_url,
         action: 'TestExtra\\Processors\\Product\\Create',
-        fields: [
-            {
-                xtype: 'textfield',
-                fieldLabel: 'Name',
-                name: 'name',
-                anchor: '100%'
-            },
-            {
-                xtype: 'textfield',
-                name: 'id',
-                readOnly: true
-            }
-        ]
+        fields: this.getFields(config)
     });
     testextra.window.CreateUpdateProduct.superclass.constructor.call(this, config);
 };
-Ext.extend(testextra.window.CreateUpdateProduct, MODx.Window);
+Ext.extend(testextra.window.CreateUpdateProduct, MODx.Window, {
+    getFields: function(config) {
+        var fields = [{
+            xtype: 'textfield',
+            fieldLabel: 'Name',
+            name: 'name',
+            anchor: '100%'
+        },{
+            xtype: 'textfield',
+            name: 'id',
+            readOnly: true
+        }];
+
+        // Add grid for the feature if it is an update. (The product ID is not yet available when creating a new product)
+        if (config.record && config.record.id) {
+            fields.push({
+                xtype: 'testextra-grid-features',
+                id: 'testextra-grid-features',
+                product_id: config.record.id
+            });
+        }
+
+        return fields;
+    }
+});
 Ext.reg('testextra-window-product-create-update', testextra.window.CreateUpdateProduct);
