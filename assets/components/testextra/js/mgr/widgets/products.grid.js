@@ -10,6 +10,8 @@ testextra.grid.Products = function(config) {
         autoHeight: true,
         paging: true,
         remoteSort: true,
+        save_action: 'TestExtra\\Processors\\Product\\UpdateFromGrid',
+        autosave: true,        
         columns: [
             {
                 header: 'Product ID',
@@ -21,12 +23,22 @@ testextra.grid.Products = function(config) {
                 header: 'Product Name',
                 dataIndex: 'name',
                 sortable: true,
+                editor: { xtype: 'textfield' },
                 width: 200
+            },
+            {
+                header      : 'Actions',
+                sortable    : false,
+                editable    : false,
+                width       : 100,
+                fixed       : true,
+                renderer    : this.renderActions
             }
         ],
         tbar: [{
-            text: 'Create Product',
+            text: '<i class="icon icon-plus"></i>' + 'Create Product',
             handler: this.createProduct,
+            cls: 'primary-button',
             scope: this
         }]
     });
@@ -61,12 +73,12 @@ Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
     getMenu: function() {
         var m = [];
         m.push({
-            text: 'Update Product',
+            text: '<i class="x-menu-item-icon icon icon-edit"></i>' + 'Update Product',
             handler: this.updateProduct
         });
         m.push('-');
         m.push({
-            text: 'Remove Product',
+            text: '<i class="x-menu-item-icon icon icon-times"></i>' + 'Remove Product',
             handler: this.removeProduct
         });
         this.addContextMenuItem(m);
@@ -88,6 +100,48 @@ Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
                 'success': { fn: function() { this.refresh(); }, scope: this}
             }
         });
+    },
+    renderActions: function(value, metaData, record, rowIndex, colIndex, store) {
+        var tpl = new Ext.XTemplate('<tpl for=".">' +
+            '<tpl if="actions !== null">' +
+                '<ul class="x-grid-actions">' +
+                    '<tpl for="actions">' +
+                        '<li><button type="button" class="x-btn x-btn-small {className}" title="{title}">{text}</button></li>' +
+                    '</tpl>' +
+                '</ul>' +
+            '</tpl>' +
+        '</tpl>', {
+             compiled : true
+         });
+
+        return tpl.apply({
+            actions : [{
+                className   : 'icon icon-pencil action-edit',
+                title       : 'Update Product',
+                text        : ''
+            },{
+                className   : 'icon icon-times action-remove',
+                text        : '',
+                title       : 'Remove Product'
+            }]
+        });
+    },
+    onClick: function(e) {
+        var btn = e.getTarget();
+        var cls = btn.className.split(' ');
+        var record = this.getSelectionModel().getSelected();
+
+        if (record) {
+            this.menu.record = record.data;
+
+            if (-1 !== cls.indexOf('action-edit')) {
+                this.updateProduct(e.getTarget(), e);
+            } else if (-1 !== cls.indexOf('action-remove')) {
+                this.removeProduct(e.getTarget(), e);
+            }
+        }
+
+        return false;
     }
 });
 Ext.reg('testextra-grid-products', testextra.grid.Products);

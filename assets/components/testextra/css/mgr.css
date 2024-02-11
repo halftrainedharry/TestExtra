@@ -1,0 +1,38 @@
+/* Copied from the extra "Formalicious" */
+
+.x-menu-item-icon {
+    left: 7px !important;
+    font-size: 14px !important;
+    line-height: 16px !important;
+    text-align: center !important;
+}
+
+.x-btn-text .icon {
+    margin-right: 8px;
+}
+
+.x-grid-actions {
+    margin: -5px -8px;
+}
+
+.x-grid-actions li {
+    display: inline-block;
+    padding: 0;
+    margin: 0 8px;
+}
+
+.x-grid-actions li .x-btn {
+    display: block;
+    height: 20px;
+    color: #081922;
+    font-size: 16px;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+.x-grid-actions li .x-btn:hover {
+    color: #081922;
+    background-color: transparent;
+}
