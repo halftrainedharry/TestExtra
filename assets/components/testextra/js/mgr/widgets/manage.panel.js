@@ -42,6 +42,17 @@ testextra.panel.Manage = function (config) {
                                 cls: 'main-wrapper'
                             }
                         ]
+                    },
+                    {
+                        title: 'Vendors',
+                        layout: 'form',
+                        items: [
+                            {
+                                xtype: 'testextra-grid-vendors',
+                                preventRender: true,
+                                cls: 'main-wrapper'
+                            }
+                        ]
                     }
                 ]
             }

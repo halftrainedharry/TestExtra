@@ -8,7 +8,9 @@ database:
     tables:
         - "\\TestExtra\\Model\\Product"
         - "\\TestExtra\\Model\\Category"
-        - "\\TestExtra\\Model\\ProductCategory"                
+        - "\\TestExtra\\Model\\ProductCategory"
+        - "\\TestExtra\\Model\\Vendor"
+        - "\\TestExtra\\Model\\Feature"
 menus:
     - text: testextra.menu
       action: manage

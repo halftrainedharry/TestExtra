@@ -9,6 +9,8 @@ $xpdo_meta_map = array (
         array (
             0 => 'TestExtra\\Model\\Product',
             1 => 'TestExtra\\Model\\Category',
+            2 => 'TestExtra\\Model\\Vendor',
+            3 => 'TestExtra\\Model\\Feature',
         ),
         'xPDO\\Om\\xPDOObject' => 
         array (

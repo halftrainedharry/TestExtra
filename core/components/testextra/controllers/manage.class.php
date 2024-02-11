@@ -18,6 +18,7 @@ class TestExtraManageManagerController extends TestExtraBaseManagerController
         $this->addLastJavascript($this->testextra->getOption('jsUrl') . 'mgr/widgets/manage.panel.js');
         $this->addLastJavascript($this->testextra->getOption('jsUrl') . 'mgr/widgets/products.grid.js');
         $this->addLastJavascript($this->testextra->getOption('jsUrl') . 'mgr/widgets/categories.grid.js');
+        $this->addLastJavascript($this->testextra->getOption('jsUrl') . 'mgr/widgets/vendors.grid.js');
         $this->addLastJavascript($this->testextra->getOption('jsUrl') . 'mgr/sections/manage.js');
 
         $this->addHtml(

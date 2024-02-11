@@ -3,8 +3,12 @@
 
     <object class="Product" table="testextra_product" extends="xPDO\Om\xPDOSimpleObject">
         <field key="name" dbtype="varchar" phptype="string" precision="200" null="false" default="" />
+        <field key="vendor_id" dbtype="int" attributes="unsigned" precision="10" phptype="integer" null="false" default="0" />
+        <field key="state" dbtype="varchar" phptype="string" precision="100" null="false" default="" />
 
         <composite alias="ProductCategories" class="TestExtra\Model\ProductCategory" local="id" foreign="product_id" cardinality="many" owner="local" />
+        <composite alias="Features" class="TestExtra\Model\Feature" local="id" foreign="product_id" cardinality="many" owner="local" />
+        <aggregate alias="Vendor" class="TestExtra\Model\Vendor" local="vendor_id" foreign="id" cardinality="one" owner="foreign" />
     </object>
 
     <object class="Category" table="testextra_category" extends="xPDO\Om\xPDOSimpleObject">
@@ -24,6 +28,19 @@
 
         <aggregate alias="Product" class="TestExtra\Model\Product" local="product_id" foreign="id" cardinality="one" owner="foreign" />
         <aggregate alias="Category" class="TestExtra\Model\Category" local="category_id" foreign="id" cardinality="one" owner="foreign" />
+    </object>
+
+    <object class="Vendor" table="testextra_vendor" extends="xPDO\Om\xPDOSimpleObject">
+        <field key="name" dbtype="varchar" phptype="string" precision="200" null="false" default="" />
+
+        <aggregate alias="Products" class="TestExtra\Model\Product" local="id" foreign="vendor_id" cardinality="many" owner="local" />
+    </object>
+
+    <object class="Feature" table="testextra_feature" extends="xPDO\Om\xPDOSimpleObject">
+        <field key="content" dbtype="varchar" phptype="string" precision="200" null="false" default="" />
+        <field key="product_id" dbtype="int" attributes="unsigned" precision="10" phptype="integer" null="false" default="0" />
+
+        <aggregate alias="Product" class="TestExtra\Model\Product" local="product_id" foreign="id" cardinality="one" owner="foreign" />
     </object>
 
 </model>
