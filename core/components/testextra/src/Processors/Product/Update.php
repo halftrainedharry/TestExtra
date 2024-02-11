@@ -9,7 +9,17 @@ class Update extends UpdateProcessor
 {
     public $classKey = Product::class;
     public $objectType = 'testextra.product';
-    public $languageTopics = ['testextra:default'];    
+    public $languageTopics = ['testextra:default'];
+    
+    // Necessary if xtype 'checkbox' is used instead of 'xcheckbox'
+    // public function initialize()
+    // {
+    //     if (null === $this->getProperty('published')) {
+    //         $this->setProperty('published', 0);
+    //     }
+
+    //     return parent::initialize();
+    // }
 
     public function beforeSet()
     {

@@ -37,11 +37,12 @@ testextra.grid.Products = function(config) {
             {
                 header: 'Deleted',
                 dataIndex: 'deleted',
-                renderer: function (value) {
-                    return value
-                        ? String.format('<span class="red">{0}</span>', 'Deleted')
-                        : String.format('<span class="green">{0}</span>', 'No');
-                },
+                renderer    : this.renderBoolean,
+                // renderer: function (value) {
+                //     return value
+                //         ? String.format('<span class="red">{0}</span>', 'Deleted')
+                //         : String.format('<span class="green">{0}</span>', 'No');
+                // },
                 editor: { xtype: 'combo-boolean' },
                 sortable: false,
                 width: 100,
@@ -111,7 +112,12 @@ Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
                 'success': { fn: function() { this.refresh(); }, scope: this}
             }
         });
-    }
+    },
+    renderBoolean: function(d, c) {
+        c.css = 1 === parseInt(d) || d ? 'red' : 'green';
+
+        return 1 === parseInt(d) || d ? _('yes') : _('no');
+    },
 });
 Ext.reg('testextra-grid-products', testextra.grid.Products);
 
@@ -131,8 +137,10 @@ testextra.window.CreateUpdateProduct = function(config) {
                 anchor: '100%'
             },
             {
-                xtype: 'xcheckbox',
-                fieldLabel: 'Published',
+                xtype: 'xcheckbox', //xtype: 'checkbox',
+                // inputValue: 1, // if xtype = 'checkbox' -> submitted value "1" instead of "on"
+                fieldLabel: 'Published', // label above checkbox
+                // boxLabel: 'Published (boxLabel)', // label next to checkbox
                 name: 'published',
                 anchor: '100%'
             },
