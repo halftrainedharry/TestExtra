@@ -11,7 +11,7 @@ testextra.grid.Products = function(config) {
         paging: true,
         remoteSort: true,
         save_action: 'TestExtra\\Processors\\Product\\UpdateFromGrid',
-        autosave: true,        
+        autosave: true,
         columns: [
             {
                 header: 'Product ID',
@@ -27,12 +27,12 @@ testextra.grid.Products = function(config) {
                 width: 200
             },
             {
-                header      : 'Actions',
-                sortable    : false,
-                editable    : false,
-                width       : 100,
-                fixed       : true,
-                renderer    : this.renderActions
+                header: 'Actions',
+                sortable: false,
+                editable: false,
+                width: 100,
+                fixed: true,
+                renderer: this.renderActions
             }
         ],
         tbar: [{
@@ -116,13 +116,13 @@ Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
 
         return tpl.apply({
             actions : [{
-                className   : 'icon icon-pencil action-edit',
-                title       : 'Update Product',
-                text        : ''
+                className: 'icon icon-pencil action-edit',
+                title: 'Update Product',
+                text: ''
             },{
-                className   : 'icon icon-times action-remove',
-                text        : '',
-                title       : 'Remove Product'
+                className: 'icon icon-times action-remove',
+                text: '',
+                title: 'Remove Product'
             }]
         });
     },
