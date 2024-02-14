@@ -27,19 +27,36 @@ testextra.grid.Products = function(config) {
                 width: 200
             },
             {
+                header: "Features",
+                id: "editFeatures",
+                sortable: false,
+                disabled: true,
+                width: 50,
+                align: "center",
+                renderer: function (value, metaData, record, rowIndex, colIndex, store) {
+                    value = "<i style='text-align:center; cursor:pointer;' class='icon icon-external-link icon-lg'></i>";
+                    return value;
+                },
+                listeners: {
+                    click: {fn:function(_this, grid, rowIndex, e) {
+                        this.manageFeatures();
+                    }, scope:this}
+                }
+            },
+            {
                 header: 'Features Count',
                 dataIndex: 'features_count',
                 sortable: true,
                 width: 100
             },
-            {
-                header: 'Actions',
-                sortable: false,
-                editable: false,
-                width: 100,
-                fixed: true,
-                renderer: this.renderActions
-            }
+            // {
+            //     header: 'Actions',
+            //     sortable: false,
+            //     editable: false,
+            //     width: 100,
+            //     fixed: true,
+            //     renderer: this.renderActions
+            // }
         ],
         tbar: [{
             text: '<i class="icon icon-plus"></i>' + 'Create Product',
@@ -80,10 +97,15 @@ Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
     getMenu: function() {
         var m = [];
         m.push({
+            text: '<i class="x-menu-item-icon icon icon-external-link"></i>' + 'Manage Features',
+            handler: this.manageFeatures,
+            scope: this
+        });
+        m.push('-');
+        m.push({
             text: '<i class="x-menu-item-icon icon icon-edit"></i>' + 'Update Product',
             handler: this.updateProduct
         });
-        m.push('-');
         m.push({
             text: '<i class="x-menu-item-icon icon icon-times"></i>' + 'Remove Product',
             handler: this.removeProduct
@@ -107,6 +129,24 @@ Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
                 'success': { fn: function() { this.refresh(); }, scope: this}
             }
         });
+    },
+    manageFeatures: function() {
+        var selectedId = 0;
+        if (this.menu.record){
+            selectedId = this.menu.record.id;
+        } else {
+            var sm = this.getSelectionModel();
+            if (!sm.hasSelection()) {
+                return;
+            }
+            // Selected row
+            var selected = sm.getSelected();
+            var selectedId = selected.id;
+        }
+
+        var redirectUrl = '?a=features&namespace=' + MODx.request.namespace + '&productid=';
+        redirectUrl += selectedId;
+        MODx.loadPage(redirectUrl);
     },
     renderActions: function(value, metaData, record, rowIndex, colIndex, store) {
         var tpl = new Ext.XTemplate('<tpl for=".">' +
@@ -133,23 +173,23 @@ Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
             }]
         });
     },
-    onClick: function(e) {
-        var btn = e.getTarget();
-        var cls = btn.className.split(' ');
-        var record = this.getSelectionModel().getSelected();
+    // onClick: function(e) {
+    //     var btn = e.getTarget();
+    //     var cls = btn.className.split(' ');
+    //     var record = this.getSelectionModel().getSelected();
 
-        if (record) {
-            this.menu.record = record.data;
+    //     if (record) {
+    //         this.menu.record = record.data;
 
-            if (-1 !== cls.indexOf('action-edit')) {
-                this.updateProduct(e.getTarget(), e);
-            } else if (-1 !== cls.indexOf('action-remove')) {
-                this.removeProduct(e.getTarget(), e);
-            }
-        }
+    //         if (-1 !== cls.indexOf('action-edit')) {
+    //             this.updateProduct(e.getTarget(), e);
+    //         } else if (-1 !== cls.indexOf('action-remove')) {
+    //             this.removeProduct(e.getTarget(), e);
+    //         }
+    //     }
 
-        return false;
-    }
+    //     return true;
+    // }
 });
 Ext.reg('testextra-grid-products', testextra.grid.Products);
 

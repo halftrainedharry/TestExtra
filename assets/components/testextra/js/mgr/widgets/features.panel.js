@@ -1,4 +1,4 @@
-testextra.panel.Manage = function (config) {
+testextra.panel.Features = function (config) {
     config = config || {};
     Ext.apply(config, {
         border: false,
@@ -6,7 +6,7 @@ testextra.panel.Manage = function (config) {
         cls: 'container',
         items: [
             {
-                html: '<h2>' + _('testextra.manage.page_title') + '</h2>',
+                html: '<h2>' + 'Features' + '</h2>',
                 border: false,
                 cls: 'modx-page-header'
             },
@@ -21,34 +21,11 @@ testextra.panel.Manage = function (config) {
                 hideMode: 'offsets',
                 items: [
                     {
-                        title: 'Products',
+                        title: 'Features',
                         layout: 'form',
                         items: [
                             {
-                                xtype: 'testextra-grid-products',
-                                preventRender: true,
-                                showActionsColumn: false, // hide default grid action column
-                                cls: 'main-wrapper'
-                            }
-                        ]
-                    },
-                    {
-                        title: 'Categories',
-                        layout: 'form',
-                        items: [
-                            {
-                                xtype: 'testextra-grid-categories',
-                                preventRender: true,
-                                cls: 'main-wrapper'
-                            }
-                        ]
-                    },
-                    {
-                        title: 'Vendors',
-                        layout: 'form',
-                        items: [
-                            {
-                                xtype: 'testextra-grid-vendors',
+                                xtype: 'testextra-grid-features',
                                 preventRender: true,
                                 cls: 'main-wrapper'
                             }
@@ -58,7 +35,7 @@ testextra.panel.Manage = function (config) {
             }
         ]
     });
-    testextra.panel.Manage.superclass.constructor.call(this, config);
+    testextra.panel.Features.superclass.constructor.call(this, config);
 };
-Ext.extend(testextra.panel.Manage, MODx.Panel);
-Ext.reg('testextra-panel-manage', testextra.panel.Manage);
+Ext.extend(testextra.panel.Features, MODx.Panel);
+Ext.reg('testextra-panel-features', testextra.panel.Features);

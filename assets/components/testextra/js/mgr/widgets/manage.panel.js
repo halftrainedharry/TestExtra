@@ -27,7 +27,7 @@ testextra.panel.Manage = function (config) {
                             {
                                 xtype: 'testextra-grid-products',
                                 preventRender: true,
-                                showActionsColumn: false, // hide default grid action column
+                                // showActionsColumn: false, // hide default grid action column
                                 cls: 'main-wrapper'
                             }
                         ]

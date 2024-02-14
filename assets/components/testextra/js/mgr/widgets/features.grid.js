@@ -5,7 +5,7 @@ testextra.grid.Features = function(config) {
         url: MODx.config.connector_url,
         baseParams: {
             action: 'TestExtra\\Processors\\Feature\\GetList',
-            product_id: config.product_id,
+            product_id: MODx.request.productid //config.product_id,
         },
         fields: ['id', 'content', 'product_id'],
         autoHeight: true,
@@ -43,7 +43,7 @@ Ext.extend(testextra.grid.Features, MODx.grid.Grid, {
             }
         });
         win.fp.getForm().setValues({
-            product_id : this.config.product_id
+            product_id : MODx.request.productid //this.config.product_id
         });
         win.show(e.target);
     },
