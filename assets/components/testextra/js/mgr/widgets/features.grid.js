@@ -2,6 +2,7 @@ testextra.grid.Features = function(config) {
     config = config || {};
     Ext.applyIf(config, {
         id: 'testextra-grid-features',
+        current_product_id: 0,
         url: MODx.config.connector_url,
         baseParams: {
             action: 'TestExtra\\Processors\\Feature\\GetList'
@@ -41,6 +42,13 @@ Ext.extend(testextra.grid.Features, MODx.grid.Grid, {
                 'success': {fn: function() { this.refresh(); }, scope: this}
             }
         });
+
+        // Set correct Product-ID for new feature
+        var record = {};
+        record.product_id = this.current_product_id;
+        // win.fp.getForm().reset();
+        win.fp.getForm().setValues(record);
+
         win.show(e.target);
     },
     updateFeature: function(btn, e){
@@ -108,8 +116,15 @@ testextra.window.CreateUpdateFeature = function(config) {
                 anchor: '100%'
             },
             {
-                xtype: 'textfield',
+                xtype: 'textfield', // use 'hidden' for production
+                fieldLabel: 'ID',
                 name: 'id',
+                readOnly: true
+            },
+            {
+                xtype: 'textfield', // use 'hidden' for production
+                fieldLabel: 'Product ID',
+                name: 'product_id',
                 readOnly: true
             }
         ]
