@@ -46,7 +46,7 @@ class TestExtraFeaturesManagerController extends TestExtraBaseManagerController
             '
             <script type="text/javascript">
                 Ext.onReady(function() {
-                    MODx.load({ xtype: "testextra-page-features"});
+                    MODx.load({ xtype: "testextra-page-features", product_name: "' . addslashes($this->product->get('name')) . '" });
                 });
             </script>
         '

@@ -4,7 +4,8 @@ testextra.page.Features = function (config) {
         components: [
             {
                 xtype: 'testextra-panel-features',
-                renderTo: 'testextra-panel-features-div'
+                renderTo: 'testextra-panel-features-div',
+                product_name: config.product_name
             }
         ],
         buttons: [{

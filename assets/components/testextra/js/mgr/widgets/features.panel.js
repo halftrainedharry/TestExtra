@@ -6,7 +6,7 @@ testextra.panel.Features = function (config) {
         cls: 'container',
         items: [
             {
-                html: '<h2>' + 'Features for product "' + testextra.config.product_name +'"</h2>',
+                html: '<h2>' + 'Features for product "' + config.product_name +'"</h2>', //html: '<h2>' + 'Features for product "' + testextra.config.product_name +'"</h2>',
                 border: false,
                 cls: 'modx-page-header'
             },
