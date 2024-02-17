@@ -1,5 +1,6 @@
 testextra.panel.Features = function (config) {
     config = config || {};
+    config.preview_size = "160";
 
     var items = [
         {
@@ -99,37 +100,23 @@ testextra.panel.Features = function (config) {
                 id: 'product-img',
                 source: MODx.config['textextra.image_media_source'],
                 allowBlank: true,
-                updatePreview: function (r, _this) {
-                    var value = this.getValue();
-                    var source = MODx.config['textextra.image_media_source'] ? MODx.config['textextra.image_media_source'] : 1;
-                    if (!value) {
-                        value = "https://via.placeholder.com/160x160?text=No+image";
-                    } else {
-                        value = MODx.config.base_url + 'connectors/system/phpthumb.php?w=160&h=160&aoe=0&far=0&f=png&src=' + value + '&wctx=web&source=' + source; //&source={$source}&version={$hash}
-                    }
-
-                    Ext.getCmp('img-preview').el.dom.querySelector('img').src = value;
-                },
                 listeners: {
                     select: {
                         fn: function (data) {
-                            // this.setValue(data.fullRelativeUrl);
-                            var f = this.getForm();
-                            var img = f.findField('img');
-                            img.updatePreview({img: data.relativeUrl}, this);
+                            this.updateImgPreview('product-img','img-preview');
                         },
                         scope: this
                     },
                     change: {
                         fn: function (cb, newValue) {
-                            cb.updatePreview({img: newValue}, this);
+                            this.updateImgPreview('product-img','img-preview');
                         },
                         scope: this
                     }
                 }
             },{
                 id: 'img-preview',
-                html: '<img src="' + "https://via.placeholder.com/160x160?text=No+image" + '" style="max-height: 160px;max-width: 160px;margin-top: 15px;">'
+                html: `<img src="https://via.placeholder.com/${config.preview_size}x${config.preview_size}?text=No+image" style="max-height: ${config.preview_size}px;max-width: ${config.preview_size}px;margin-top: 15px;">`
             // },{
             //     xtype: 'text-password',
             //     name: 'txt',
@@ -205,12 +192,8 @@ Ext.extend(testextra.panel.Features, MODx.FormPanel, {
                 this.getForm().setValues(r);
                 this.onUpdateTitle(r.name);
 
-                // Preview-Bilder setzen
-                var source = MODx.config['textextra.image_media_source'] ? MODx.config['textextra.image_media_source'] : 1;
-                if (r.img) {
-                    var img_src = MODx.config.base_url + 'connectors/system/phpthumb.php?w=160&h=160&aoe=0&far=0&f=png&src=' + r.img + '&wctx=web&source=' + source;
-                    Ext.getCmp('img-preview').el.dom.querySelector('img').src = img_src;
-                }
+                // set preview image
+                this.updateImgPreview('product-img','img-preview');
 
                 this.fireEvent('ready', r);
                 MODx.fireEvent('ready');
@@ -255,6 +238,22 @@ Ext.extend(testextra.panel.Features, MODx.FormPanel, {
             // }, 150);
 
             this.initialized = true;
+        }
+    },
+    updateImgPreview: function (cmp_id, preview_cmp_id) {
+        var img_cmp = Ext.getCmp(cmp_id);
+        if (img_cmp) {
+            var value = img_cmp.getValue();
+            var source = MODx.config['textextra.image_media_source'] ? MODx.config['textextra.image_media_source'] : 1;
+            if (!value) {
+                value = `https://via.placeholder.com/${this.config.preview_size}x${this.config.preview_size}?text=No+image`;
+            } else {
+                value = MODx.config.base_url + `connectors/system/phpthumb.php?w=${this.config.preview_size}&h=${this.config.preview_size}&aoe=0&far=0&f=png&src=${value}&wctx=web&source=${source}`; //&source={$source}&version={$hash}
+            }
+            var img_preview_cmp = Ext.getCmp(preview_cmp_id);
+            if (img_preview_cmp){
+                img_preview_cmp.el.dom.querySelector('img').src = value;
+            }
         }
     },
     ready: function(r) {
