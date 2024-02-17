@@ -18,7 +18,7 @@ class GetList extends GetListProcessor
     {
         $product_id = $this->getProperty('product_id');
 
-        if (!empty($product_id)) {
+        if ($product_id !== null) {
             $c->where([
                 'product_id' => $product_id
             ]);
