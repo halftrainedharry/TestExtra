@@ -6,7 +6,7 @@ testextra.grid.Products = function(config) {
         baseParams: {
             action: 'TestExtra\\Processors\\Product\\GetList'
         },
-        fields: ['id', 'name', 'features_count', 'description', 'txt', 'stock', 'release_date'],
+        fields: ['id', 'name', 'features_count', 'description', 'txt', 'stock', 'release_date', 'img'],
         autoHeight: true,
         paging: true,
         remoteSort: true,
@@ -18,6 +18,21 @@ testextra.grid.Products = function(config) {
                 dataIndex: 'id',
                 sortable: true,
                 width: 100
+            },
+            {
+                header: "Image",
+                dataIndex: 'img',
+                sortable: false,
+                disabled: true,
+                width: 50,
+                renderer: function (value, metaData, record, rowIndex, colIndex, store) {
+                    var source = MODx.config['textextra.image_media_source'] ? MODx.config['textextra.image_media_source'] : 1;
+                    if (value) {
+                        var img_src = MODx.config.base_url + 'connectors/system/phpthumb.php?h=60&f=png&src=' + value + '&wctx=web&source=' + source;
+                        return '<img src="' + img_src + '" style="max-height: 60px;" alt="" />'
+                    }
+                    return '';
+                }
             },
             {
                 header: 'Product Name',

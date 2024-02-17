@@ -90,11 +90,52 @@ testextra.panel.Features = function (config) {
                 anchor: '100%',
                 // regex: /^(([a-zA-Z0-9_\+\.\-]+)@([a-zA-Z0-9_.\-]+)\.([a-zA-Z]{2,5}){1,25})+([;,.](([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5}){1,25})+)*$/,
                 vtype: 'email'
+            },{
+                name: 'img',
+                xtype: 'modx-combo-browser',
+                fieldLabel: 'Product Image',
+                triggerClass: 'x-form-image-trigger', // image icon
+                anchor: '100%',
+                id: 'product-img',
+                source: MODx.config['textextra.image_media_source'],
+                allowBlank: true,
+                updatePreview: function (r, _this) {
+                    var value = this.getValue();
+                    var source = MODx.config['textextra.image_media_source'] ? MODx.config['textextra.image_media_source'] : 1;
+                    if (!value) {
+                        value = "https://via.placeholder.com/160x160?text=No+image";
+                    } else {
+                        value = MODx.config.base_url + 'connectors/system/phpthumb.php?w=160&h=160&aoe=0&far=0&f=png&src=' + value + '&wctx=web&source=' + source; //&source={$source}&version={$hash}
+                    }
+
+                    Ext.getCmp('img-preview').el.dom.querySelector('img').src = value;
+                },
+                listeners: {
+                    select: {
+                        fn: function (data) {
+                            // this.setValue(data.fullRelativeUrl);
+                            var f = this.getForm();
+                            var img = f.findField('img');
+                            img.updatePreview({img: data.relativeUrl}, this);
+                        },
+                        scope: this
+                    },
+                    change: {
+                        fn: function (cb, newValue) {
+                            cb.updatePreview({img: newValue}, this);
+                        },
+                        scope: this
+                    }
+                }
+            },{
+                id: 'img-preview',
+                html: '<img src="' + "https://via.placeholder.com/160x160?text=No+image" + '" style="max-height: 160px;max-width: 160px;margin-top: 15px;">'
             // },{
             //     xtype: 'text-password',
             //     name: 'txt',
             //     fieldLabel: 'Password field',
             //     anchor: '100%',
+
             }]
         }
     ];
@@ -163,6 +204,13 @@ Ext.extend(testextra.panel.Features, MODx.FormPanel, {
                 var r = testextra.config.record;
                 this.getForm().setValues(r);
                 this.onUpdateTitle(r.name);
+
+                // Preview-Bilder setzen
+                var source = MODx.config['textextra.image_media_source'] ? MODx.config['textextra.image_media_source'] : 1;
+                if (r.img) {
+                    var img_src = MODx.config.base_url + 'connectors/system/phpthumb.php?w=160&h=160&aoe=0&far=0&f=png&src=' + r.img + '&wctx=web&source=' + source;
+                    Ext.getCmp('img-preview').el.dom.querySelector('img').src = img_src;
+                }
 
                 this.fireEvent('ready', r);
                 MODx.fireEvent('ready');

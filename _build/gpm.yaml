@@ -4,6 +4,9 @@ lowCaseName: testextra
 namespace: TestExtra
 description: 'Testing some Ext.js functionality'
 author: halftrainedharry
+systemSettings:
+  - key: image_media_source
+    value: 1
 database:
     tables:
         - "\\TestExtra\\Model\\Product"
