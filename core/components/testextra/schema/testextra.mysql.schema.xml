@@ -6,6 +6,11 @@
         <field key="vendor_id" dbtype="int" attributes="unsigned" precision="10" phptype="integer" null="false" default="0" />
         <field key="state" dbtype="varchar" phptype="string" precision="100" null="false" default="" />
 
+        <field key="description" dbtype="text" phptype="string" null="false" default=""/>
+        <field key="txt" dbtype="varchar" phptype="string" precision="200" null="false" default="" />
+        <field key="stock" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="release_date" dbtype="datetime" phptype="datetime" null="true" />
+
         <composite alias="ProductCategories" class="TestExtra\Model\ProductCategory" local="id" foreign="product_id" cardinality="many" owner="local" />
         <composite alias="Features" class="TestExtra\Model\Feature" local="id" foreign="product_id" cardinality="many" owner="local" />
         <aggregate alias="Vendor" class="TestExtra\Model\Vendor" local="vendor_id" foreign="id" cardinality="one" owner="foreign" />

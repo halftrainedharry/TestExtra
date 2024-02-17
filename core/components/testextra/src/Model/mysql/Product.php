@@ -20,6 +20,10 @@ class Product extends \TestExtra\Model\Product
             'name' => '',
             'vendor_id' => 0,
             'state' => '',
+            'description' => '',
+            'txt' => '',
+            'stock' => 0,
+            'release_date' => NULL,
         ),
         'fieldMeta' => 
         array (
@@ -47,6 +51,36 @@ class Product extends \TestExtra\Model\Product
                 'precision' => '100',
                 'null' => false,
                 'default' => '',
+            ),
+            'description' => 
+            array (
+                'dbtype' => 'text',
+                'phptype' => 'string',
+                'null' => false,
+                'default' => '',
+            ),
+            'txt' => 
+            array (
+                'dbtype' => 'varchar',
+                'phptype' => 'string',
+                'precision' => '200',
+                'null' => false,
+                'default' => '',
+            ),
+            'stock' => 
+            array (
+                'dbtype' => 'int',
+                'precision' => '10',
+                'attributes' => 'unsigned',
+                'phptype' => 'integer',
+                'null' => false,
+                'default' => 0,
+            ),
+            'release_date' => 
+            array (
+                'dbtype' => 'datetime',
+                'phptype' => 'datetime',
+                'null' => true,
             ),
         ),
         'composites' => 
