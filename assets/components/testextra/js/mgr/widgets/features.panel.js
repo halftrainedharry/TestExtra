@@ -23,7 +23,16 @@ testextra.panel.Features = function (config) {
                 name: 'name',
                 xtype: 'textfield',
                 fieldLabel: 'Name',
-                anchor: '100%'
+                anchor: '100%',
+                enableKeyEvents: true,
+                listeners: {
+                    keyup: {
+                        fn: function(tf) {
+                            this.onUpdateTitle(tf.getValue());
+                        },
+                        scope: this
+                    }
+                }
             }]
         }
     ];
@@ -97,6 +106,7 @@ Ext.extend(testextra.panel.Features, MODx.FormPanel, {
                     'success': {
                         fn: function(r) {
                             this.getForm().setValues(r.object);
+                            this.onUpdateTitle(r.object.name);
 
                             this.fireEvent('ready', r.object);
                             MODx.fireEvent('ready');
@@ -121,6 +131,9 @@ Ext.extend(testextra.panel.Features, MODx.FormPanel, {
             // Reload the page to change the 'Create' state to 'Update'
             MODx.loadPage('?a=features&namespace=' + MODx.request.namespace + '&productid=' + o.result.object.id);
         }
+    },
+    onUpdateTitle: function(title) {
+        Ext.getCmp('testextra-panel-product-title').getEl().update('<h2>Edit Product "' + Ext.util.Format.stripTags(title) + '"</h2>');
     },
 });
 Ext.reg('testextra-panel-features', testextra.panel.Features);
