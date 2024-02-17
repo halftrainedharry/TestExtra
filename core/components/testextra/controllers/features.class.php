@@ -5,20 +5,24 @@ use TestExtra\Model\Product;
 
 class TestExtraFeaturesManagerController extends TestExtraBaseManagerController
 {
-    // protected $product;
+    protected $product;
 
     public function process(array $scriptProperties = [])
     {
         // Read Request Parameter with the product ID
-        // if (isset($scriptProperties['productid'])) {
-        //     $this->product = $this->modx->getObject(Product::class, [
-        //         'id' => $scriptProperties['productid']
-        //     ]);
-        // }
+        if (isset($scriptProperties['productid'])) {
+            if ($scriptProperties['productid'] > 0) {
+                $this->product = $this->modx->getObject(Product::class, [
+                    'id' => $scriptProperties['productid']
+                ]);
+            } else {
+                $this->product = $this->modx->newObject(Product::class);
+            }
+        }
 
-        // if ($this->product === null) {
-        //     $this->failure('Product doesn\'t exist.');
-        // }
+        if ($this->product === null) {
+            $this->failure('Product doesn\'t exist.');
+        }
 
         return '<div id="testextra-panel-features-div"></div>';
     }
@@ -30,13 +34,14 @@ class TestExtraFeaturesManagerController extends TestExtraBaseManagerController
 
     public function loadCustomCssJs(): void
     {
-        // if ($this->product !== null) {
-        //     $this->addHtml('<script type="text/javascript">
-        //         Ext.onReady(function() {
-        //             testextra.config.product_name = "' . addslashes($this->product->get('name')) . '";
-        //         });
-        //     </script>');
-        // }
+        if ($this->product !== null) {
+            $product = $this->product->toArray();
+            $this->addHtml('<script type="text/javascript">
+                Ext.onReady(function() {
+                    testextra.config.record = ' . $this->modx->toJSON($product) . ';
+                });
+            </script>');
+        }
 
         $this->addLastJavascript($this->testextra->getOption('jsUrl') . 'mgr/widgets/features.panel.js');
         $this->addLastJavascript($this->testextra->getOption('jsUrl') . 'mgr/widgets/features.grid.js');

@@ -15,7 +15,7 @@ testextra.page.Features = function (config) {
             method: 'remote',
             cls: 'primary-button',
             process: config.isUpdate ? 'TestExtra\\Processors\\Product\\Update' : 'TestExtra\\Processors\\Product\\Create',
-            // checkDirty : true,
+            checkDirty : true,
             keys: [{
                 key: MODx.config.keymap_save || 's',
                 ctrl: true

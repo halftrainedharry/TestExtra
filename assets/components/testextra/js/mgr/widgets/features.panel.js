@@ -96,26 +96,33 @@ testextra.panel.Features = function (config) {
 Ext.extend(testextra.panel.Features, MODx.FormPanel, {
     setup: function() {
         if (this.config.isUpdate) {
-            // load existing data
-            MODx.Ajax.request({
-                url: this.config.url,
-                params: {
-                    action: 'TestExtra\\Processors\\Product\\Get',
-                    id: MODx.request.productid
-                },
-                listeners: {
-                    'success': {
-                        fn: function(r) {
-                            this.getForm().setValues(r.object);
-                            this.onUpdateTitle(r.object.name);
+            var r = testextra.config.record;
+            this.getForm().setValues(r);
+            this.onUpdateTitle(r.name);
 
-                            this.fireEvent('ready', r.object);
-                            MODx.fireEvent('ready');
-                        },
-                        scope: this
-                    }
-                }
-            });
+            this.fireEvent('ready', r);
+            MODx.fireEvent('ready');
+
+            // load existing data
+            // MODx.Ajax.request({
+            //     url: this.config.url,
+            //     params: {
+            //         action: 'TestExtra\\Processors\\Product\\Get',
+            //         id: MODx.request.productid
+            //     },
+            //     listeners: {
+            //         'success': {
+            //             fn: function(r) {
+            //                 this.getForm().setValues(r.object);
+            //                 this.onUpdateTitle(r.object.name);
+
+            //                 this.fireEvent('ready', r.object);
+            //                 MODx.fireEvent('ready');
+            //             },
+            //             scope: this
+            //         }
+            //     }
+            // });
         } else {
             var default_values = {};
             this.getForm().setValues(default_values);
