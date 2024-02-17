@@ -24,6 +24,7 @@ class Product extends \TestExtra\Model\Product
             'txt' => '',
             'stock' => 0,
             'release_date' => NULL,
+            'img' => '',
         ),
         'fieldMeta' => 
         array (
@@ -81,6 +82,14 @@ class Product extends \TestExtra\Model\Product
                 'dbtype' => 'datetime',
                 'phptype' => 'datetime',
                 'null' => true,
+            ),
+            'img' => 
+            array (
+                'dbtype' => 'varchar',
+                'phptype' => 'string',
+                'precision' => '250',
+                'null' => false,
+                'default' => '',
             ),
         ),
         'composites' => 
