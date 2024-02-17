@@ -33,6 +33,11 @@ testextra.panel.Features = function (config) {
                         scope: this
                     }
                 }
+            },{
+                xtype: 'textarea',
+                fieldLabel: 'Description',
+                name: 'description',
+                anchor: '100%'
             }]
         }
     ];
@@ -94,41 +99,45 @@ testextra.panel.Features = function (config) {
     testextra.panel.Features.superclass.constructor.call(this, config);
 };
 Ext.extend(testextra.panel.Features, MODx.FormPanel, {
+    initialized: false,
     setup: function() {
-        if (this.config.isUpdate) {
-            var r = testextra.config.record;
-            this.getForm().setValues(r);
-            this.onUpdateTitle(r.name);
+        if (!this.initialized) {
+            if (this.config.isUpdate) {
+                var r = testextra.config.record;
+                this.getForm().setValues(r);
+                this.onUpdateTitle(r.name);
 
-            this.fireEvent('ready', r);
-            MODx.fireEvent('ready');
+                this.fireEvent('ready', r);
+                MODx.fireEvent('ready');
 
-            // load existing data
-            // MODx.Ajax.request({
-            //     url: this.config.url,
-            //     params: {
-            //         action: 'TestExtra\\Processors\\Product\\Get',
-            //         id: MODx.request.productid
-            //     },
-            //     listeners: {
-            //         'success': {
-            //             fn: function(r) {
-            //                 this.getForm().setValues(r.object);
-            //                 this.onUpdateTitle(r.object.name);
+                // load existing data
+                // MODx.Ajax.request({
+                //     url: this.config.url,
+                //     params: {
+                //         action: 'TestExtra\\Processors\\Product\\Get',
+                //         id: MODx.request.productid
+                //     },
+                //     listeners: {
+                //         'success': {
+                //             fn: function(r) {
+                //                 this.getForm().setValues(r.object);
+                //                 this.onUpdateTitle(r.object.name);
 
-            //                 this.fireEvent('ready', r.object);
-            //                 MODx.fireEvent('ready');
-            //             },
-            //             scope: this
-            //         }
-            //     }
-            // });
-        } else {
-            var default_values = {};
-            this.getForm().setValues(default_values);
+                //                 this.fireEvent('ready', r.object);
+                //                 MODx.fireEvent('ready');
+                //             },
+                //             scope: this
+                //         }
+                //     }
+                // });
+            } else {
+                var default_values = {};
+                this.getForm().setValues(default_values);
 
-            this.fireEvent('ready', {});
-            MODx.fireEvent('ready');
+                this.fireEvent('ready', {});
+                MODx.fireEvent('ready');
+            }
+            this.initialized = true;
         }
     },
     ready: function(r) {

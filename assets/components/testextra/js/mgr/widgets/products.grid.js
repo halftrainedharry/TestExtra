@@ -6,7 +6,7 @@ testextra.grid.Products = function(config) {
         baseParams: {
             action: 'TestExtra\\Processors\\Product\\GetList'
         },
-        fields: ['id', 'name', 'features_count'],
+        fields: ['id', 'name', 'features_count', 'description', 'txt', 'stock', 'release_date'],
         autoHeight: true,
         paging: true,
         remoteSort: true,
@@ -34,7 +34,7 @@ testextra.grid.Products = function(config) {
                 width: 50,
                 align: "center",
                 renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-                    value = "<i style='text-align:center; cursor:pointer;' class='icon icon-edit icon-lg'></i>";
+                    value = "<i style='text-align:center; cursor:pointer;' class='icon icon-external-link icon-lg'></i>";
                     return value;
                 },
                 listeners: {
@@ -74,15 +74,14 @@ Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
     },
     getMenu: function() {
         var m = [];
-        // m.push({
-        //     text: '<i class="x-menu-item-icon icon icon-external-link"></i>' + 'Manage Features',
-        //     handler: this.manageFeatures,
-        //     scope: this
-        // });
-        // m.push('-');
         m.push({
-            text: '<i class="x-menu-item-icon icon icon-edit"></i>' + 'Update Product',
+            text: '<i class="x-menu-item-icon icon icon-external-link"></i>' + 'Update Product',
             handler: this.updateProduct
+        });
+        m.push('-');
+        m.push({
+            text: '<i class="x-menu-item-icon icon icon-edit"></i>' + 'Quick-Update',
+            handler: this.quickUpdate
         });
         m.push({
             text: '<i class="x-menu-item-icon icon icon-times"></i>' + 'Remove Product',
@@ -125,6 +124,21 @@ Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
         var redirectUrl = '?a=features&namespace=' + MODx.request.namespace + '&productid=';
         redirectUrl += selectedId;
         MODx.loadPage(redirectUrl);
+    },
+    quickUpdate: function(btn, e){
+        if (!this.menu.record || !this.menu.record.id){
+            return false;
+        }
+        var win = MODx.load({
+            xtype: 'testextra-window-product-create-update',
+            title: 'Update Product',
+            action: 'TestExtra\\Processors\\Product\\Update',
+            listeners: {
+                'success': {fn: function() { this.refresh(); }, scope: this}
+            }
+        });
+        win.fp.getForm().setValues(this.menu.record);
+        win.show(e.target);
     },
     // renderActions: function(value, metaData, record, rowIndex, colIndex, store) {
     //     var tpl = new Ext.XTemplate('<tpl for=".">' +
@@ -172,41 +186,34 @@ Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
 Ext.reg('testextra-grid-products', testextra.grid.Products);
 
 // Window
-// testextra.window.CreateUpdateProduct = function(config) {
-//     config = config || {};
-//     Ext.applyIf(config, {
-//         width: 1200,
-//         autoHeight: true,
-//         closeAction: 'close',
-//         url: MODx.config.connector_url,
-//         action: 'TestExtra\\Processors\\Product\\Create',
-//         fields: this.getFields(config)
-//     });
-//     testextra.window.CreateUpdateProduct.superclass.constructor.call(this, config);
-// };
-// Ext.extend(testextra.window.CreateUpdateProduct, MODx.Window, {
-//     getFields: function(config) {
-//         var fields = [{
-//             xtype: 'textfield',
-//             fieldLabel: 'Name',
-//             name: 'name',
-//             anchor: '100%'
-//         },{
-//             xtype: 'textfield',
-//             name: 'id',
-//             readOnly: true
-//         }];
-
-//         // Add grid for the feature if it is an update. (The product ID is not yet available when creating a new product)
-//         if (config.record && config.record.id) {
-//             fields.push({
-//                 xtype: 'testextra-grid-features',
-//                 id: 'testextra-grid-features',
-//                 product_id: config.record.id
-//             });
-//         }
-
-//         return fields;
-//     }
-// });
-// Ext.reg('testextra-window-product-create-update', testextra.window.CreateUpdateProduct);
+testextra.window.CreateUpdateProduct = function(config) {
+    config = config || {};
+    Ext.applyIf(config, {
+        width: 1200,
+        autoHeight: true,
+        closeAction: 'close',
+        url: MODx.config.connector_url,
+        action: 'TestExtra\\Processors\\Product\\Create',
+        fields: [{
+            xtype: 'textfield',
+            fieldLabel: 'Name',
+            name: 'name',
+            anchor: '100%'
+        },{
+            xtype: 'textarea',
+            fieldLabel: 'Description',
+            name: 'description',
+            anchor: '100%'
+            // height: 400,
+            // grow: false
+        },{
+            xtype: 'textfield', // use 'hidden' in production
+            name: 'id',
+            readOnly: true
+        }]
+    });
+    testextra.window.CreateUpdateProduct.superclass.constructor.call(this, config);
+};
+Ext.extend(testextra.window.CreateUpdateProduct, MODx.Window, {
+});
+Ext.reg('testextra-window-product-create-update', testextra.window.CreateUpdateProduct);
