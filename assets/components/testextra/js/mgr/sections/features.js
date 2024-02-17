@@ -15,6 +15,7 @@ testextra.page.Features = function (config) {
             method: 'remote',
             cls: 'primary-button',
             process: config.isUpdate ? 'TestExtra\\Processors\\Product\\Update' : 'TestExtra\\Processors\\Product\\Create',
+            // checkDirty : true,
             keys: [{
                 key: MODx.config.keymap_save || 's',
                 ctrl: true
@@ -23,7 +24,8 @@ testextra.page.Features = function (config) {
             text: '<i class="icon icon-arrow-left"></i>' + 'Back to Products'
             ,id: 'testextra-btn-back-to-products'
             ,handler: function() {
-                MODx.loadPage('?a=manage&namespace=' + MODx.request.namespace);
+                // MODx.loadPage('?a=manage&namespace=' + MODx.request.namespace);
+                MODx.loadPage('manage', 'namespace=' + MODx.request.namespace); // Alternative way
             }
             ,scope: this
         }]

@@ -71,7 +71,8 @@ testextra.panel.Features = function (config) {
         cls: 'container',
         url: MODx.config.connector_url,
         baseParams: {
-            action: 'TestExtra\\Processors\\Product\\Create'
+            action: config.isUpdate ? 'TestExtra\\Processors\\Product\\Update' : 'TestExtra\\Processors\\Product\\Create'
+            // id: MODx.request.productid
         },
         useLoadingMask: true,
         items: items,
