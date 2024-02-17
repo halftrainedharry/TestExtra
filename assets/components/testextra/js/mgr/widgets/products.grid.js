@@ -129,7 +129,12 @@ Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
         if (!this.menu.record || !this.menu.record.id){
             return false;
         }
-        var win = MODx.load({
+
+        if (this.quickUpdateWindow) {
+            this.quickUpdateWindow.destroy();
+        }
+
+        this.quickUpdateWindow = MODx.load({
             xtype: 'testextra-window-product-create-update',
             title: 'Update Product',
             action: 'TestExtra\\Processors\\Product\\Update',
@@ -137,8 +142,8 @@ Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
                 'success': {fn: function() { this.refresh(); }, scope: this}
             }
         });
-        win.fp.getForm().setValues(this.menu.record);
-        win.show(e.target);
+        this.quickUpdateWindow.fp.getForm().setValues(this.menu.record);
+        this.quickUpdateWindow.show(e.target);
     },
     // renderActions: function(value, metaData, record, rowIndex, colIndex, store) {
     //     var tpl = new Ext.XTemplate('<tpl for=".">' +
@@ -188,6 +193,8 @@ Ext.reg('testextra-grid-products', testextra.grid.Products);
 // Window
 testextra.window.CreateUpdateProduct = function(config) {
     config = config || {};
+    this.ident = Ext.id(); // Generate unique id.
+    console.log(this.ident);
     Ext.applyIf(config, {
         width: 1200,
         autoHeight: true,
@@ -200,12 +207,20 @@ testextra.window.CreateUpdateProduct = function(config) {
             name: 'name',
             anchor: '100%'
         },{
+            id: 'description-' + this.ident, // Without a (changing) unique identifier, the richtext editor isn't shown the second time the window opens
             xtype: 'textarea',
             fieldLabel: 'Description',
             name: 'description',
-            anchor: '100%'
+            anchor: '100%',
             // height: 400,
             // grow: false
+            listeners   : {
+                afterrender : {
+                    fn: function(event) {
+                        MODx.loadRTE(event.id);
+                    }
+                }
+            }
         },{
             xtype: 'textfield', // use 'hidden' in production
             name: 'id',
@@ -213,6 +228,11 @@ testextra.window.CreateUpdateProduct = function(config) {
         }]
     });
     testextra.window.CreateUpdateProduct.superclass.constructor.call(this, config);
+
+    // Alternative way
+    // this.on('activate', function(w, e) {
+    //     MODx.loadRTE('description-' + this.ident);
+    // }, this);
 };
 Ext.extend(testextra.window.CreateUpdateProduct, MODx.Window, {
 });

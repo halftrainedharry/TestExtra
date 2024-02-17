@@ -30,4 +30,22 @@ abstract class TestExtraBaseManagerController extends modExtraManagerController 
     {
         return true;
     }
+
+    public function loadRTE() {
+        // Check system settings if richtext editor should be used
+        $useEditor = $this->modx->getOption('use_editor');
+        $whichEditor = $this->modx->getOption('which_editor');
+        if ($useEditor && !empty($whichEditor)) {
+            // Invoke OnRichTextEditorInit event to prepare RTE
+            $onRichTextEditorInit = $this->modx->invokeEvent('OnRichTextEditorInit', [
+                'editor' => $whichEditor,
+                'elements' => [],
+            ]);
+            if (is_array($onRichTextEditorInit)) {
+                $onRichTextEditorInit = implode('', $onRichTextEditorInit);
+            }
+
+            return $onRichTextEditorInit;
+        }
+    }
 }

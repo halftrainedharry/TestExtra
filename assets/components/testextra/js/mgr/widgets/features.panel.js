@@ -34,10 +34,19 @@ testextra.panel.Features = function (config) {
                     }
                 }
             },{
+                id: 'description-richtext',
                 xtype: 'textarea',
                 fieldLabel: 'Description',
                 name: 'description',
-                anchor: '100%'
+                anchor: '100%',
+                listeners   : {
+                    afterrender : {
+                        fn: function(event) {
+                            MODx.loadRTE(event.id);
+                        }
+                    }
+                }
+            },{
             }]
         }
     ];
@@ -137,6 +146,18 @@ Ext.extend(testextra.panel.Features, MODx.FormPanel, {
                 this.fireEvent('ready', {});
                 MODx.fireEvent('ready');
             }
+
+            // Alternative way to init richtext editor
+            // var rtes = [];
+            // rtes.push('description-richtext');
+            // setTimeout(function() { // timeout probably not needed
+            //     if (rtes.length > 0 && MODx.loadRTE) {
+            //         Ext.each(rtes, function(id, index) {
+            //             MODx.loadRTE(id);
+            //         });
+            //     }
+            // }, 150);
+
             this.initialized = true;
         }
     },

@@ -22,6 +22,12 @@ class TestExtraManageManagerController extends TestExtraBaseManagerController
         $this->addLastJavascript($this->testextra->getOption('jsUrl') . 'mgr/widgets/features.grid.js');
         $this->addLastJavascript($this->testextra->getOption('jsUrl') . 'mgr/sections/manage.js');
 
+        // load richtext editor
+        $rte = $this->loadRTE();
+        // if (!empty($rte)) {
+        //     $this->addHtml($rte);
+        // }
+
         $this->addHtml(
             '
             <script type="text/javascript">
