@@ -46,7 +46,55 @@ testextra.panel.Features = function (config) {
                         }
                     }
                 }
+            // },{
+            //     // (ACE) Code-Editor
+            //     xtype: Ext.ComponentMgr.isRegistered('modx-texteditor') ? 'modx-texteditor' : 'textarea',
+            //     mimeType: 'text/html',
+            //     name: 'description',
+            //     // hideLabel: true,
+            //     anchor: '100%',
+            //     height: 400,
+            //     grow: false,
+            //     // value: '',
+            //     listeners: {
+            //         render: function () {
+            //             // if ((this.xtype === 'modx-texteditor') && this.editor){
+            //             //     this.editor.getSession().setMode('ace/mode/twig')
+            //             // }
+            //         }
+            //     }
             },{
+                xtype: 'xdatetime',
+                fieldLabel: 'Release Date',
+                name: 'release_date',
+                allowBlank: true,
+                dateFormat: MODx.config.manager_date_format,
+                timeFormat: MODx.config.manager_time_format,
+                dateWidth: 120,
+                timeWidth: 120
+                // startDay: parseInt(MODx.config.manager_week_start),
+	            // offset_time: MODx.config.server_offset_time
+            },{
+                xtype: 'numberfield',
+                allowDecimals: false,
+                allowNegative: false,
+                fieldLabel: 'Stock',
+                name: 'stock',
+                anchor: '100%',
+                // allowBlank: true
+            },{
+                xtype: 'textfield',
+                fieldLabel: 'Text field',
+                maxLength: 100,
+                name: 'txt',
+                anchor: '100%',
+                // regex: /^(([a-zA-Z0-9_\+\.\-]+)@([a-zA-Z0-9_.\-]+)\.([a-zA-Z]{2,5}){1,25})+([;,.](([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5}){1,25})+)*$/,
+                vtype: 'email'
+            // },{
+            //     xtype: 'text-password',
+            //     name: 'txt',
+            //     fieldLabel: 'Password field',
+            //     anchor: '100%',
             }]
         }
     ];
