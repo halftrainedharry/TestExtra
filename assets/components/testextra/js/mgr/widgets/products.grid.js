@@ -51,52 +51,64 @@ testextra.grid.Products = function(config) {
             scope: this
         }],
         listeners: {
-            'render': {
-                scope: this,
-                fn: function(grid) {
-                    new Ext.dd.DropTarget(grid.container, {
-                        ddGroup: 'mygridDD',
-                        copy: false,
-                        notifyDrop: function(dd, e, data) { //dd = thing being dragged, e = event, data = data from dragged source
-                            if (dd.getDragData(e)) {
-                                var targetNode = dd.getDragData(e).selections[0];
-                                var sourceNode = data.selections[0];
+            'afterrender': {
+                fn: this.sortValues,
+                scope: this
+            }
+        },
+    });
+    testextra.grid.Products.superclass.constructor.call(this, config);
+};
+Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
+    sortValues: function() {
+        new Ext.dd.DropTarget(this.getView().mainBody, {
+            ddGroup: 'mygridDD',
+            notifyDrop: function(dd, e, data) {
+                var grid = data.grid,
+                    sels = grid.getSelectionModel().getSelections(),
+                    items = grid.getStore().data.items,
+                    index = dd.getDragData(e).rowIndex;
 
-                                grid.fireEvent('sort',{
-                                    target: targetNode,
-                                    source: sourceNode,
-                                    event: e,
-                                    dd: dd
-                                });
+                if (undefined !== index) {
+                    // Reorder items locally in the store
+                    if (grid.getSelectionModel().hasSelection()) {
+                        for (i = 0; i < sels.length; i++) {
+                            grid.getStore().remove(grid.getStore().getById(sels[i].id));
+                            grid.getStore().insert(index, sels[i]);
+                        }
+
+                        grid.getSelectionModel().selectRecords(sels);
+                    }
+
+                    // Read all items ID in the current order (and add them to an array)
+                    var order = [];
+                    Ext.each(items, (function(record) {
+                        order.push(record.id);
+                    }).bind(this));
+
+                    MODx.Ajax.request({
+                        url: MODx.config.connector_url,
+                        params: {
+                            action: 'TestExtra\\Processors\\Product\\Sort2',
+                            order: order.join(',')
+                        },
+                        listeners: {
+                            'success': {
+                                fn: function() {
+                                    grid.getSelectionModel().clearSelections(true);
+                                    // grid.refresh(); // To see the updated values in the "position" column
+                                },
+                                scope: this
                             }
                         }
                     });
                 }
             }
-        }
-    });
-    testextra.grid.Products.superclass.constructor.call(this, config);
-    this.addEvents('sort');
-    this.on('sort', this.onSort, this);
-};
-Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
-    onSort: function(o) {
-        MODx.Ajax.request({
-            url: MODx.config.connector_url,
-            params: {
-                action: 'TestExtra\\Processors\\Product\\Sort',
-                source: o.source.id,
-                target: o.target.id
-            },
-            listeners: {
-                'success': { fn: function() { this.refresh(); }, scope: this},
-                'failure': { fn: function() { this.refresh(); }, scope: this}
-            }
         });
     },
-    getDragDropText: function(){
-        return this.selModel.selections.items[0].data.name;
-    },
+    // getDragDropText: function(){
+    //     return this.selModel.selections.items[0].data.name;
+    // },
     createProduct: function(btn, e){
         var win = MODx.load({
             xtype: 'testextra-window-product-create-update',
