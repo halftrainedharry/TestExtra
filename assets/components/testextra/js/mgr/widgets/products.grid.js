@@ -5,7 +5,7 @@ testextra.grid.Products = function(config) {
         url: MODx.config.connector_url,
         baseParams: {
             action: 'TestExtra\\Processors\\Product\\GetList',
-            // sort: 'position'
+            sort: 'position' // Makes sure this is also the defaultSortField of the GetList processor (or change the processor to take this parameter into account)
         },
         fields: ['id', 'name', 'position'],
         autoHeight: true,
