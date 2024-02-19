@@ -20,6 +20,7 @@ class Product extends \TestExtra\Model\Product
             'name' => '',
             'vendor_id' => 0,
             'state' => '',
+            'position' => 0,
         ),
         'fieldMeta' => 
         array (
@@ -47,6 +48,14 @@ class Product extends \TestExtra\Model\Product
                 'precision' => '100',
                 'null' => false,
                 'default' => '',
+            ),
+            'position' => 
+            array (
+                'dbtype' => 'int',
+                'precision' => '10',
+                'phptype' => 'integer',
+                'null' => false,
+                'default' => 0,
             ),
         ),
         'composites' => 
