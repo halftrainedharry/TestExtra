@@ -15,6 +15,7 @@ class TestExtraManageManagerController extends TestExtraBaseManagerController
 
     public function loadCustomCssJs(): void
     {
+        $this->addLastJavascript($this->testextra->getOption('jsUrl') . 'mgr/griddraganddrop.js');
         $this->addLastJavascript($this->testextra->getOption('jsUrl') . 'mgr/widgets/manage.panel.js');
         $this->addLastJavascript($this->testextra->getOption('jsUrl') . 'mgr/widgets/products.grid.js');
         $this->addLastJavascript($this->testextra->getOption('jsUrl') . 'mgr/widgets/categories.grid.js');

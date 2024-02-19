@@ -4,11 +4,13 @@ testextra.grid.Products = function(config) {
         id: 'testextra-grid-products',
         url: MODx.config.connector_url,
         baseParams: {
-            action: 'TestExtra\\Processors\\Product\\GetList'
+            action: 'TestExtra\\Processors\\Product\\GetList',
+            // sort: 'position'
         },
         fields: ['id', 'name', 'position'],
         autoHeight: true,
         paging: true,
+        // pageSize: 30,
         ddGroup: 'mygridDD',
         enableDragDrop: true,
         remoteSort: true,
@@ -49,66 +51,64 @@ testextra.grid.Products = function(config) {
             handler: this.createProduct,
             cls: 'primary-button',
             scope: this
-        }],
-        listeners: {
-            'afterrender': {
-                fn: this.sortValues,
-                scope: this
-            }
-        },
+        }]
     });
     testextra.grid.Products.superclass.constructor.call(this, config);
+
+    this.on('render', this.registerGridDropTarget, this);
+    this.on('beforedestroy', this.destroyScrollManager, this);
 };
 Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
-    sortValues: function() {
-        new Ext.dd.DropTarget(this.getView().mainBody, {
-            ddGroup: 'mygridDD',
-            notifyDrop: function(dd, e, data) {
-                var grid = data.grid,
-                    sels = grid.getSelectionModel().getSelections(),
-                    items = grid.getStore().data.items,
-                    index = dd.getDragData(e).rowIndex;
+    registerGridDropTarget: function() {
 
-                if (undefined !== index) {
-                    // Reorder items locally in the store
-                    if (grid.getSelectionModel().hasSelection()) {
-                        for (i = 0; i < sels.length; i++) {
-                            grid.getStore().remove(grid.getStore().getById(sels[i].id));
-                            grid.getStore().insert(index, sels[i]);
-                        }
+        var ddrow = new Ext.ux.dd.GridReorderDropTarget(this, {
+            copy: false,
+            sortCol: 'position',
+            listeners: {
+                'beforerowmove': function(objThis, oldIndex, newIndex, records) {
+                },
 
-                        grid.getSelectionModel().selectRecords(sels);
-                    }
-
-                    // Read all items ID in the current order (and add them to an array)
-                    var order = [];
-                    Ext.each(items, (function(record) {
-                        order.push(record.id);
-                    }).bind(this));
-
+                'afterrowmove': function(objThis, oldIndex, newIndex, records) {
                     MODx.Ajax.request({
-                        url: MODx.config.connector_url,
-                        params: {
-                            action: 'TestExtra\\Processors\\Product\\Sort2',
-                            order: order.join(',')
-                        },
-                        listeners: {
+                        url: MODx.config.connector_url
+                        ,params: {
+                            action: 'TestExtra\\Processors\\Product\\DDReorder',
+                            idItem: records.pop().id,
+                            oldIndex: oldIndex,
+                            newIndex: newIndex
+                        }
+                        ,listeners: {
                             'success': {
-                                fn: function() {
-                                    grid.getSelectionModel().clearSelections(true);
-                                    // grid.refresh(); // To see the updated values in the "position" column
-                                },
-                                scope: this
+                                fn: function(r) {
+                                    this.target.grid.refresh();
+                                },scope: this
                             }
                         }
                     });
+                },
+
+                'beforerowcopy': function(objThis, oldIndex, newIndex, records) {
+                },
+
+                'afterrowcopy': function(objThis, oldIndex, newIndex, records) {
                 }
             }
         });
+
+        Ext.dd.ScrollManager.register(this.getView().getEditorParent());
     },
-    // getDragDropText: function(){
-    //     return this.selModel.selections.items[0].data.name;
-    // },
+    destroyScrollManager: function() {
+        Ext.dd.ScrollManager.unregister(this.getView().getEditorParent());
+    },
+    getDragDropText: function(){
+        if (this.config.baseParams.sort != 'position') {
+            if (this.store.sortInfo == undefined || this.store.sortInfo.field != 'position') {
+                return 'Sort grid by <strong>position</strong> to use drag & drop sorting.';
+            }
+        }
+
+        return 'Change order of: ' + this.selModel.selections.items[0].data.name;
+    },
     createProduct: function(btn, e){
         var win = MODx.load({
             xtype: 'testextra-window-product-create-update',
