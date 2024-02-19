@@ -10,6 +10,6 @@ class GetList extends GetListProcessor
     public $objectType = 'testextra.product';
     public $languageTopics = ['testextra:default'];
 
-    public $defaultSortField = 'id';
+    public $defaultSortField = 'position';
     public $defaultSortDirection = 'ASC';
 }

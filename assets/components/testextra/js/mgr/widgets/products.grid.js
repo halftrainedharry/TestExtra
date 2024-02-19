@@ -6,9 +6,11 @@ testextra.grid.Products = function(config) {
         baseParams: {
             action: 'TestExtra\\Processors\\Product\\GetList'
         },
-        fields: ['id', 'name'],
+        fields: ['id', 'name', 'position'],
         autoHeight: true,
         paging: true,
+        ddGroup: 'mygridDD',
+        enableDragDrop: true,
         remoteSort: true,
         save_action: 'TestExtra\\Processors\\Product\\UpdateFromGrid',
         autosave: true,
@@ -27,6 +29,13 @@ testextra.grid.Products = function(config) {
                 width: 200
             },
             {
+                header: 'Sort',
+                dataIndex: 'position',
+                sortable: true,
+                editor: { xtype: 'numberfield' },
+                width: 100
+            },
+            {
                 header: 'Actions',
                 sortable: false,
                 editable: false,
@@ -40,11 +49,54 @@ testextra.grid.Products = function(config) {
             handler: this.createProduct,
             cls: 'primary-button',
             scope: this
-        }]
+        }],
+        listeners: {
+            'render': {
+                scope: this,
+                fn: function(grid) {
+                    new Ext.dd.DropTarget(grid.container, {
+                        ddGroup: 'mygridDD',
+                        copy: false,
+                        notifyDrop: function(dd, e, data) { //dd = thing being dragged, e = event, data = data from dragged source
+                            if (dd.getDragData(e)) {
+                                var targetNode = dd.getDragData(e).selections[0];
+                                var sourceNode = data.selections[0];
+
+                                grid.fireEvent('sort',{
+                                    target: targetNode,
+                                    source: sourceNode,
+                                    event: e,
+                                    dd: dd
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        }
     });
     testextra.grid.Products.superclass.constructor.call(this, config);
+    this.addEvents('sort');
+    this.on('sort', this.onSort, this);
 };
 Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
+    onSort: function(o) {
+        MODx.Ajax.request({
+            url: MODx.config.connector_url,
+            params: {
+                action: 'TestExtra\\Processors\\Product\\Sort',
+                source: o.source.id,
+                target: o.target.id
+            },
+            listeners: {
+                'success': { fn: function() { this.refresh(); }, scope: this},
+                'failure': { fn: function() { this.refresh(); }, scope: this}
+            }
+        });
+    },
+    getDragDropText: function(){
+        return this.selModel.selections.items[0].data.name;
+    },
     createProduct: function(btn, e){
         var win = MODx.load({
             xtype: 'testextra-window-product-create-update',
