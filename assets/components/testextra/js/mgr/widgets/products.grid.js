@@ -64,24 +64,25 @@ Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
         var ddrow = new Ext.ux.dd.GridReorderDropTarget(this, {
             copy: false,
             sortCol: 'position',
+            isGridFiltered: this.isGridFiltered.bind(this),
             listeners: {
                 'beforerowmove': function(objThis, oldIndex, newIndex, records) {
                 },
 
                 'afterrowmove': function(objThis, oldIndex, newIndex, records) {
                     MODx.Ajax.request({
-                        url: MODx.config.connector_url
-                        ,params: {
+                        url: MODx.config.connector_url,
+                        params: {
                             action: 'TestExtra\\Processors\\Product\\DDReorder',
                             idItem: records.pop().id,
                             oldIndex: oldIndex,
                             newIndex: newIndex
-                        }
-                        ,listeners: {
+                        },
+                        listeners: {
                             'success': {
                                 fn: function(r) {
                                     this.target.grid.refresh();
-                                },scope: this
+                                }, scope: this
                             }
                         }
                     });
@@ -107,7 +108,24 @@ Ext.extend(testextra.grid.Products, MODx.grid.Grid, {
             }
         }
 
+        if (this.isGridFiltered()) {
+            return 'Clear filters to use drag & drop sorting.';
+        }
+
         return 'Change order of: ' + this.selModel.selections.items[0].data.name;
+    },
+    isGridFiltered: function () {
+        var search = this.getStore().baseParams.search;
+        if (search && search != '') {
+            return true;
+        }
+
+        // var themeFilter = this.getStore().baseParams.theme;
+        // if (!((themeFilter !== undefined) && (themeFilter !== null) && (themeFilter !== '') && (themeFilter !== 0))) {
+        //     return true;
+        // }
+
+        return false;
     },
     createProduct: function(btn, e){
         var win = MODx.load({

@@ -1,5 +1,5 @@
 /**
- * This code is copied from the extra "Collections" (https://github.com/modxcms/Collections)
+ * This code is copied from the extras "Fred" (https://github.com/modxcms/fred) and "Collections" (https://github.com/modxcms/Collections)
  * It makes sure that the current sort order of the grid is correct and that the data in the grid isn't filtered.
 */
 
@@ -7,38 +7,16 @@ Ext.ux.dd.GridReorderDropTarget = function(grid, config) {
     this.target = new Ext.dd.DropTarget(grid.getEl(), {
         ddGroup: grid.ddGroup || 'GridDD',
         grid: grid,
-        sortCol: 'menuindex',
+        sortCol: 'position',
+        isGridFiltered: null,
         gridDropTarget: this,
         notifyDrop: function(dd, e, data){
-            if (!data.grid.parseSortField) {
-                data.grid.parseSortField = function (value) {return value;}
-            }
-
-            if (!data.grid.parsePermanentSort) {
-                data.grid.parsePermanentSort = function (value) {return false;}
-            }
-
-            // Check if the grid is sorted correctly?
-            if (data.grid.parseSortField(data.grid.config.baseParams.sort) != this.sortCol) {
-                // The default sort column of the GetList processor is different than the sort column for the dragdrop
-                if (data.grid.store.sortInfo == undefined || data.grid.parseSortField(data.grid.store.sortInfo.field) != this.sortCol) { // sortInfo = { field: "position", direction: "ASC" }
-                    return false;
-                }
-            } else {
-                if (data.grid.store.sortInfo != undefined && data.grid.parseSortField(data.grid.store.sortInfo.field) != this.sortCol) {
-                    return false;
-                }
-            }
-
-            if (data.grid.parsePermanentSort(this.sortCol)) {
+            if (data.grid.store.sortInfo && data.grid.store.sortInfo.field != this.sortCol) {
                 return false;
             }
 
-            // Check if the search field and filter comboboxes are empty?
-            var search = Ext.getCmp('collections-child-search');
-            var filter = Ext.getCmp('collections-grid-filter-status');
-            if (search != undefined && filter != undefined) {
-                if (search.getValue() != '' || filter.getValue() != '') {
+            if (typeof this.isGridFiltered === "function") {
+                if (this.isGridFiltered()) {
                     return false;
                 }
             }
@@ -78,34 +56,12 @@ Ext.ux.dd.GridReorderDropTarget = function(grid, config) {
             this.grid.getView().dragZone.ddel.innerHTML = this.grid.getDragDropText();
             this.grid.getView().dragZone.proxy.update(this.grid.getView().dragZone.ddel);
 
-            if (!data.grid.parseSortField) {
-                data.grid.parseSortField = function (value) {return value;}
+            if (data.grid.store.sortInfo && data.grid.store.sortInfo.field != this.sortCol) {
+                return this.dropNotAllowed;
             }
 
-            if (!data.grid.parsePermanentSort) {
-                data.grid.parsePermanentSort = function (value) {return false;}
-            }
-
-            // Check if the grid is sorted correctly?
-            if (data.grid.parseSortField(data.grid.config.baseParams.sort) != this.sortCol) {
-                if (data.grid.store.sortInfo == undefined || data.grid.parseSortField(data.grid.store.sortInfo.field) != this.sortCol) {
-                    return this.dropNotAllowed;
-                }
-            } else {
-                if (data.grid.store.sortInfo != undefined && data.grid.parseSortField(data.grid.store.sortInfo.field) != this.sortCol) {
-                    return this.dropNotAllowed;
-                }
-            }
-
-            if (data.grid.parsePermanentSort(this.sortCol)) {
-                return false;
-            }
-
-            // Check if the search field and filter comboboxes are empty?
-            var search = Ext.getCmp('collections-child-search');
-            var filter = Ext.getCmp('collections-grid-filter-status');
-            if (search != undefined && filter != undefined) {
-                if (search.getValue() != '' || filter.getValue() != '') {
+            if (typeof this.isGridFiltered === "function") {
+                if (this.isGridFiltered()) {
                     return this.dropNotAllowed;
                 }
             }
